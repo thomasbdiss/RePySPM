@@ -1,3 +1,4 @@
+import time
 from .commands import OHCcommands
 
 class ScanControl:
@@ -208,12 +209,16 @@ class ScanControl:
         if forced:
             self.controller.scan_control.scan_stop()
             
-            # Set 0 scan site to place it with offset to the desired position
-            self.controller.scan_parameters.set_width(1*10-12) 
-            self.controller.scan_parameters.set_height(1*10-12) 
-            
-            self.controller.scan_parameters.set_offset_x(x)
-            self.controller.scan_parameters.set_offset_y(y)
+        # Set 0 scan site to place it with offset to the desired position
+        self.controller.scan_parameters.set_width(1e-12) 
+        self.controller.scan_parameters.set_height(1e-12) 
+        
+        self.controller.scan_parameters.set_offset_x(x)
+        self.controller.scan_parameters.set_offset_y(y)
+
+        self.controller.scan_control.scan_down()
+        time.sleep(self.controller.scan_parameters.get_scan_speed()*1.1) # Add 10 % extra time, this function needs to be redone in a better way
+        self.controller.scan_control.scan_stop()
 
     def get_path(self):
         """Retrieves the path associated with the scan."""
