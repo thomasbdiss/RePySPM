@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "openspm"
+version = "0.1.0"
+description = "AFM and LBNI controller modules"
+requires-python = ">=3.9"
+dependencies = [
+    "pywin32>=311",
+	"nifpga>=22.0"
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["afm_controller*", "lbni_controller*"]
+
+
