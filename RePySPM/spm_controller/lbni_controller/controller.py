@@ -2,6 +2,7 @@
 import win32com.client  # Python ActiveX Client
 import time
 import os
+import logging
 
 from .signals import Signals
 from .scanparameters import ScanParameters
@@ -20,6 +21,8 @@ from .afm_modes.fm import FMMode
 from .afm_modes.ort import OffResonanceMode
 from .afm_modes.contact import ContactMode
 
+from .exceptions import ViInitError, ViRunningInThreadError
+
 class AFMController:        
     def __init__(self, root_path):
         """Main controller class for an SPM instrument."""
@@ -28,7 +31,7 @@ class AFMController:
         self.Run_Python_LV_Bridge_path = os.path.join(api_path, "AsynRunPythonLVExternalBridge.vi")
         self.Stop_Python_LV_Bridge_path = os.path.join(api_path, "AsynStopPythonLVExternalBridge.vi")
         
-        print(f"Will connect to path: {self.Python_LV_Bridge_path}")
+        logging.info(f"Connecting to VI in path: {self.Python_LV_Bridge_path}")
         
         self.labview =  win32com.client.Dispatch("LabVIEW.Application")
         self.Python_LV_Bridge_reference = None
@@ -93,7 +96,7 @@ class AFMController:
 
     def connect(self):
         """Establishes connection to SPM hardware."""
-        print("Connecting to SPM system...")
+        logging.info("Connecting to SPM system...")
         try:
             # Connect to LabVIEW
             self.labview = win32com.client.Dispatch("LabVIEW.Application")
@@ -105,44 +108,47 @@ class AFMController:
             self.Run_Python_LV_Bridge_reference = self.labview.GetVIReference(self.Run_Python_LV_Bridge_path)
             self.Run_Python_LV_Bridge_reference.FPWinOpen = False  # Ensure the front panel is not shown
             
-            print(f"VI '{self.Python_LV_Bridge_path}' initialized.")
-            print(f"VI '{self.Run_Python_LV_Bridge_path}' initialized.")
+            logging.info(f"VI '{self.Python_LV_Bridge_path}' initialized.")
+            logging.info(f"VI '{self.Run_Python_LV_Bridge_path}' initialized.")
         
         except Exception as e:
-            print(f"Error initializing VI: {e}")
+            logging.error(f"Error initializing VI: {e}")
+            raise ViInitError(f"Error initializing VI: {e}")
     
     def run_Python_LV_Bridge(self):
         """Run the VI asynchronously in a separate thread."""
         try:
             if self.Python_LV_Bridge_reference is None:
-                print("VI reference is not initialized.")
+                logging.error("VI reference is not initialized.")
                 return
     
             # Run the VI asynchronously
             self.Run_Python_LV_Bridge_reference._FlagAsMethod("Run")
             self.Run_Python_LV_Bridge_reference.Run(False)
             
-            print(f"VI '{self.Run_Python_LV_Bridge_path}' is running asynchronously.")
+            logging.info(f"VI '{self.Run_Python_LV_Bridge_path}' is running asynchronously.")
     
         except Exception as e:
-            print(f"Error running VI in thread: {e}")
+            logging.error(f"Error running VI in thread: {e}")
+            raise ViRunningInThreadError(f"Error running VI in thread: {e}")
 
     def disconnect(self):
         """Disconnects from SPM hardware."""
-        print("Disconnecting from SPM system...")
+        logging.info("Disconnecting from SPM system...")
         time.sleep(1) # Wait one second to process all messages on the queu
         
         try:
             # Open the VI reference   
             self.Stop_Python_LV_Bridge_reference = self.labview.GetVIReference(self.Stop_Python_LV_Bridge_path)
             self.Stop_Python_LV_Bridge_reference.FPWinOpen = False  # Ensure the front panel is not shown
-            print(f"VI '{self.Stop_Python_LV_Bridge_path}' initialized.")
+            logging.info(f"VI '{self.Stop_Python_LV_Bridge_path}' initialized.")
 
             # Run the VI asynchronously
             self.Stop_Python_LV_Bridge_reference._FlagAsMethod("Run")
             self.Stop_Python_LV_Bridge_reference.Run(False)
-            print(f"VI '{self.Stop_Python_LV_Bridge_path}' is running asynchronously.")
+            logging.info(f"VI '{self.Stop_Python_LV_Bridge_path}' is running asynchronously.")
         
         except Exception as e:
-            print(f"Error initializing VI: {e}")
+            logging.error(f"Error initializing VI: {e}")
+            raise ViInitError(f"Error initializing VI: {e}")
 

@@ -1,6 +1,7 @@
 from .commands import OHCcommands
 
 import os
+import logging
 import nifpga
 import time
 import xml.etree.ElementTree as ET
@@ -115,12 +116,12 @@ class Utils:
         """
         controller_type = self.get_controller_type_from_init(init_xml_path)
         if controller_type is None:
-            print("Could not find 'controller_type' in Init.xml.")
+            logging.error("Could not find 'controller_type' in Init.xml.")
             return None
         
         bitfile = self.CONTROLLER_BITFILES.get(controller_type)
         if bitfile is None:
-            print(f"Unknown controller_type: {controller_type}")
+            logging.error(f"Unknown controller_type: {controller_type}")
         return bitfile
     
     def __init__(self, controller, root_path):

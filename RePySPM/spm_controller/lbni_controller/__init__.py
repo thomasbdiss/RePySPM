@@ -16,5 +16,5 @@ __all__ = [
     "AFMController", "Signals", "ScanParameters", "ScanControl",
     "ZControlPID", "Motors", "Lasers", "AcquiredImage",
     "AFMMode", "AFMModes", "AMMode", "FMMode", "ContactMode", "OffResonanceMode",
-    "Utils", "Sicm"
+    "Utils", "Sicm", "exceptions"
 ]
