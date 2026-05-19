@@ -3,7 +3,6 @@
 import win32com.client  # Python ActiveX Client
 import time
 import os
-import logging
 import ipaddress
 
 from .activex_backend import ActiveXBackend
@@ -24,8 +23,6 @@ from .afm_modes.am import AMMode
 from .afm_modes.fm import FMMode
 from .afm_modes.ort import OffResonanceMode
 from .afm_modes.contact import ContactMode
-
-from .exceptions import ViInitError, ViRunningInThreadError
 
 
 def _parse_address(address):

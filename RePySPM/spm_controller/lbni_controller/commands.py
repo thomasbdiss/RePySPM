@@ -15,6 +15,8 @@ class OHCcommands:
     r_sic = "Read:SICM::"
     w_exc = "Write:Excitation::"
     r_exc = "Read:Excitation::"
+    r_bias = "Read:Bias::"
+    w_bias = "Write:Bias::"
 
 
 

@@ -2,7 +2,7 @@ import socket
 import struct
 import json
 import numpy as np
-
+import logging
 
 class TCPBackend:
     """TCP backend for AFMController. Communicates with LabVIEW via JSON+payload protocol."""
@@ -14,11 +14,11 @@ class TCPBackend:
 
     def connect(self):
         self._close_stale_session()
-        print(f"Connecting to LabVIEW via TCP: {self.host}:{self.port}")
+        logging.info(f"Connecting to LabVIEW via TCP: {self.host}:{self.port}")
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.settimeout(10)
         self.sock.connect((self.host, self.port))
-        print(f"Connected to {self.host}:{self.port}")
+        logging.info(f"Connected to {self.host}:{self.port}")
 
     def _close_stale_session(self):
         """Probe for a leftover open session and close it gracefully before connecting."""
@@ -31,7 +31,7 @@ class TCPBackend:
             connected = True
             probe.sendall(b"close\r\n")
             probe.recv(4096)  # drain LabVIEW's response
-            print(f"Closed previous TCP session on {self.host}:{self.port}")
+            logging.info(f"Closed previous TCP session on {self.host}:{self.port}")
             time.sleep(0.5)  # give LabVIEW time to return to listening
         except OSError:
             if connected:
@@ -46,7 +46,7 @@ class TCPBackend:
             probe.close()
 
     def disconnect(self):
-        print(f"Disconnecting from {self.host}:{self.port}")
+        logging.info(f"Disconnecting from {self.host}:{self.port}")
         if self.sock:
             try:
                 self._send_raw("close")
@@ -63,6 +63,7 @@ class TCPBackend:
         _, value = self._recv_message()
         if isinstance(value, str) and value == self._ERROR_RESPONSE:
             raise RuntimeError(f"LabVIEW error for command '{command}': {value}")
+        logging.info(f"Command '{command}' executed successfully")
         return 0
 
     def read_control(self, command, control_name):
@@ -70,6 +71,7 @@ class TCPBackend:
         _, value = self._recv_message()
         if isinstance(value, str) and value == self._ERROR_RESPONSE:
             raise RuntimeError(f"LabVIEW error for command '{command}': {value}")
+        logging.info(f"Read control '{control_name}' with value: {value}")
         return value
 
     # ------------------------------------------------------------------

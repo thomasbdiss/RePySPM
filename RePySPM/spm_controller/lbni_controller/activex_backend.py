@@ -1,3 +1,5 @@
+import logging
+
 import win32com.client
 import time
 import os
@@ -17,37 +19,37 @@ class ActiveXBackend:
         self.Run_Python_LV_Bridge_reference = None
 
     def connect(self):
-        print(f"Connecting to LabVIEW via ActiveX: {self.Python_LV_Bridge_path}")
+        logging.info(f"Connecting to LabVIEW via ActiveX: {self.Python_LV_Bridge_path}")
         try:
             self.labview = win32com.client.Dispatch("LabVIEW.Application")
             self.Python_LV_Bridge_reference = self.labview.GetVIReference(self.Python_LV_Bridge_path)
             self.Python_LV_Bridge_reference.FPWinOpen = False
             self.Run_Python_LV_Bridge_reference = self.labview.GetVIReference(self.Run_Python_LV_Bridge_path)
             self.Run_Python_LV_Bridge_reference.FPWinOpen = False
-            print(f"VI '{self.Python_LV_Bridge_path}' initialized.")
+            logging.info(f"VI '{self.Python_LV_Bridge_path}' initialized.")
             self._run_bridge()
         except Exception as e:
-            print(f"Error initializing VI: {e}")
+            logging.error(f"Error initializing VI: {e}")
 
     def _run_bridge(self):
         try:
             self.Run_Python_LV_Bridge_reference._FlagAsMethod("Run")
             self.Run_Python_LV_Bridge_reference.Run(False)
-            print(f"VI '{self.Run_Python_LV_Bridge_path}' is running asynchronously.")
+            logging.info(f"VI '{self.Run_Python_LV_Bridge_path}' is running asynchronously.")
         except Exception as e:
-            print(f"Error running VI: {e}")
+            logging.error(f"Error running VI: {e}")
 
     def disconnect(self):
-        print("Disconnecting from LabVIEW (ActiveX)...")
+        logging.info("Disconnecting from LabVIEW (ActiveX)...")
         time.sleep(1)
         try:
             stop_ref = self.labview.GetVIReference(self.Stop_Python_LV_Bridge_path)
             stop_ref.FPWinOpen = False
             stop_ref._FlagAsMethod("Run")
             stop_ref.Run(False)
-            print(f"VI '{self.Stop_Python_LV_Bridge_path}' is running asynchronously.")
+            logging.info(f"VI '{self.Stop_Python_LV_Bridge_path}' is running asynchronously.")
         except Exception as e:
-            print(f"Error stopping VI: {e}")
+            logging.error(f"Error stopping VI: {e}")
 
     def write_control(self, command):
         message = 'message'
@@ -76,4 +78,5 @@ class ActiveXBackend:
             message = self.Python_LV_Bridge_reference.GetControlValue("RemoteMessage")
             time.sleep(0.05)
 
+        logging.info(f"Read control '{control_name}' with value: {self.Python_LV_Bridge_reference.GetControlValue(control_name)}")
         return self.Python_LV_Bridge_reference.GetControlValue(control_name)
