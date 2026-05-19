@@ -21,6 +21,10 @@ class Lasers:
         set_excitation_ON: Sets the state of the excitation laser (on/off).
     """
 
+    def __init__(self, controller):
+        self.controller = controller
+        self._app = controller._app
+
     def get_laser_parameters(self):
         """Retrieves the current laser parameters from the system."""
         pass
@@ -100,4 +104,3 @@ class Lasers:
     def __repr__(self):
         """Represents the Lasers object as a string."""
         return "Lasers()"
-

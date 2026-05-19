@@ -1,16 +1,16 @@
 class Motors:
     """
     A class to control the motors of the stage, lasers, and photodiode in a scanning arm system.
-    
-    This class provides methods to move and control different components of the system, 
+
+    This class provides methods to move and control different components of the system,
     including the stage, readout laser, excitation laser, and photodiode, in the X, Y, and Z directions.
     The movement can be defined by steps, time, or distance.
-    
+
     Methods:
         start_approach: Start the approach to the surface.
         stop_approach: Stops the approach procedure.
         is_approaching: Check if the system is still approaching.
-        
+
         moveX_stage_steps: Move the stage by a specified number of steps in the X direction.
         moveX_stage_time: Move the stage for a specified duration in the X direction.
         moveX_stage_distance: Move the stage by a specific distance in the X direction.
@@ -21,7 +21,7 @@ class Motors:
         moveZ_stage_time: Move the stage for a specified duration in the Z direction.
         moveZ_stage_distance: Move the stage by a specific distance in the Z direction.
         center_stage: Move the stage to its center position.
-        
+
         moveX_readout_laser_steps: Move the readout laser by a specified number of steps in the X direction.
         moveX_readout_laser_time: Move the readout laser for a specified duration in the X direction.
         moveX_readout_laser_distance: Move the readout laser by a specific distance in the X direction.
@@ -33,7 +33,7 @@ class Motors:
         moveZ_readout_laser_distance: Move the readout laser by a specific distance in the Z direction.
         center_readout_laser: Center the readout laser.
         maximize_readout_laser: Maximize the signal from the readout laser.
-        
+
         moveX_excitation_laser_steps: Move the excitation laser by a specified number of steps in the X direction.
         moveX_excitation_laser_time: Move the excitation laser for a specified duration in the X direction.
         moveX_excitation_laser_distance: Move the excitation laser by a specific distance in the X direction.
@@ -45,7 +45,7 @@ class Motors:
         moveZ_excitation_laser_distance: Move the excitation laser by a specific distance in the Z direction.
         center_excitation_laser: Center the excitation laser.
         maximize_excitation_laser: Maximize the signal from the excitation laser.
-        
+
         moveX_photodiode_steps: Move the photodiode by a specified number of steps in the X direction.
         moveX_photodiode_time: Move the photodiode for a specified duration in the X direction.
         moveX_photodiode_distance: Move the photodiode by a specific distance in the X direction.
@@ -55,19 +55,24 @@ class Motors:
         center_photodiode: Center the photodiode.
         autoalign_photodiode: Automatically align the photodiode for optimal signal.
     """
-    
+
+    def __init__(self, controller):
+        self.controller = controller
+        self._app = controller._app
+
     def start_approach(self):
         """Start the approach to the surface."""
-        pass
-    
+        self._app.Approach.StartApproach()
+        return 0
+
     def stop_approach(self):
         """Stops the approach procedure."""
         pass
-    
+
     def is_approaching(self):
         """Check if the system is still approaching."""
-        pass
-    
+        return self._app.Approach.IsMoving
+
     def moveX_stage_steps(self, Nsteps):
         """Move the stage by a specified number of steps in the X direction."""
         pass
@@ -227,4 +232,3 @@ class Motors:
     def autoalign_photodiode(self):
         """Automatically align the photodiode for optimal signal."""
         pass
-

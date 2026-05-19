@@ -1,10 +1,12 @@
+import nanosurf
 from ..afmmode import ExcType, AFMModes
+
 
 class ContactMode():
     """
     A class to control the Contact Mode for an Atomic Force Microscope (AFM) system.
 
-    This class provides methods to initialize, get, and set parameters specific to the Contact Mode, 
+    This class provides methods to initialize, get, and set parameters specific to the Contact Mode,
     including the ability to manage the relative setpoint and update the deflection value.
 
     Methods:
@@ -15,8 +17,9 @@ class ContactMode():
         set_relative_setpoint: Sets the relative setpoint mode.
     """
 
-    def __init__(self):
-        pass
+    def __init__(self, controller):
+        self.controller = controller
+        self._app = controller._app
 
     def get_mode_parameters(self):
         """Fetches the current Contact Mode parameters from the system."""

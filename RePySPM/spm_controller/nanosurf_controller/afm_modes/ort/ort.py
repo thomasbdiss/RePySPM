@@ -1,12 +1,16 @@
+import nanosurf
 from ..afmmode import ExcType, AFMModes
+
 
 class OffResonanceMode():
     """
     A class to control the Off Resonance Tapping (ORT) mode for an Atomic Force Microscope (AFM) system.
 
-    This class provides methods to initialize, get, and set parameters specific to the Off Resonance Tapping mode, 
-    ensuring proper validation and encapsulation of the excitation type, amplitude, frequency, phase, and offset 
+    This class provides methods to initialize, get, and set parameters specific to the Off Resonance Tapping mode,
+    ensuring proper validation and encapsulation of the excitation type, amplitude, frequency, phase, and offset
     used in this mode.
+
+    In Nanosurf, this mode is called WaveMode.
 
     Methods:
         get_mode_parameters: Fetches the current Off Resonance Tapping mode parameters from the system.
@@ -26,8 +30,9 @@ class OffResonanceMode():
         subtract_background: Subtracts the background from the vertical deflection signal of the cantilevers.
     """
 
-    def __init__(self):
-        pass
+    def __init__(self, controller):
+        self.controller = controller
+        self._app = controller._app
 
     def get_mode_parameters(self):
         """Fetches the current Off Resonance Tapping mode parameters from the system."""
@@ -59,7 +64,7 @@ class OffResonanceMode():
 
     def get_exc_amplitude(self):
         """Retrieves the excitation amplitude."""
-        pass
+        return self._app.OperatingMode.VibratingAmpl
 
     def set_exc_amplitude(self, exc_amplitude):
         """Sets the excitation amplitude.
@@ -67,7 +72,8 @@ class OffResonanceMode():
         Args:
             exc_amplitude (float): Amplitude of the excitation signal in volts.
         """
-        pass
+        self._app.OperatingMode.VibratingAmpl = exc_amplitude
+        return 0
 
     def get_exc_frequency(self):
         """Retrieves the excitation frequency."""
@@ -104,7 +110,7 @@ class OffResonanceMode():
             exc_offset (float): Offset of the excitation signal in volts.
         """
         pass
-    
+
     def get_output(self) -> bool:
         """Retrieves the state of the output (on/off)."""
         pass
@@ -118,7 +124,7 @@ class OffResonanceMode():
         if not isinstance(output_ON, bool):
             raise ValueError("output_ON must be a boolean value (True/False).")
         pass
-    
+
     def subtract_background(self, num_averages):
         """
         Subtracts the background from the vertical deflection signal of the cantilevers and returns a list of background values.
@@ -129,7 +135,6 @@ class OffResonanceMode():
         Returns:
             list: Background values subtracted from the vertical deflection signal.
         """
-        
         pass
 
     def __repr__(self):

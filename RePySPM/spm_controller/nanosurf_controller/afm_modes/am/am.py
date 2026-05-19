@@ -1,15 +1,17 @@
+import nanosurf
 from ..afmmode import ExcType, AFMModes
 
-class FMMode():
-    """
-    A class to control the Frequency Modulation (FM) Mode for an Atomic Force Microscope (AFM) system.
 
-    This class provides methods to initialize, get, and set parameters specific to the FM Mode, 
-    including the ability to manage excitation settings, lock-in amplifier parameters, and PLL gains.
+class AMMode():
+    """
+    A class to control the Amplitude Modulation (AM) Mode for an Atomic Force Microscope (AFM) system.
+
+    This class provides methods to initialize, get, and set parameters specific to the AM Mode,
+    including the ability to manage excitation settings, lock-in amplifier parameters, and the free amplitude.
 
     Methods:
-        get_mode_parameters: Fetches the current FM Mode parameters from the system.
-        set_mode_parameters: Sets the FM Mode parameters on the target system.
+        get_mode_parameters: Fetches the current AM Mode parameters from the system.
+        set_mode_parameters: Sets the AM Mode parameters on the target system.
         get_exc_type: Retrieves the excitation type used.
         set_exc_type: Sets the excitation type used.
         get_exc_amplitude: Retrieves the excitation amplitude.
@@ -26,26 +28,21 @@ class FMMode():
         set_lockin_bandwidth: Sets the lock-in amplifier bandwidth.
         get_lockin_order: Retrieves the lock-in amplifier order.
         set_lockin_order: Sets the lock-in amplifier order.
-        get_pll_p_gain: Retrieves the PLL proportional gain.
-        set_pll_p_gain: Sets the PLL proportional gain.
-        get_pll_i_gain: Retrieves the PLL integral gain.
-        set_pll_i_gain: Sets the PLL integral gain.
-        get_pll_d_gain: Retrieves the PLL derivative gain.
-        set_pll_d_gain: Sets the PLL derivative gain.
-        get_pll_lock: Checks if the PLL is locked.
-        set_pll_lock: Locks or unlocks the PLL.
+        get_free_amplitude: Retrieves the free amplitude of the cantilever.
+        set_free_amplitude: Sets the free amplitude of the cantilever.
         do_sweep: Performs a frequency sweep based on the given parameters.
     """
 
-    def __init__(self):
-        pass
+    def __init__(self, controller):
+        self.controller = controller
+        self._app = controller._app
 
     def get_mode_parameters(self):
-        """Fetches the current FM Mode parameters from the system."""
+        """Fetches the current AM Mode parameters from the system."""
         pass
 
-    def set_mode_parameters(self, exc_type, exc_amplitude, exc_offset, exc_frequency, exc_phase, lockin_bandwidth, lockin_order, p_gain, i_gain, d_gain, lock_pll):
-        """Sets the FM Mode parameters on the target system.
+    def set_mode_parameters(self, exc_type, exc_amplitude, exc_offset, exc_frequency, exc_phase, lockin_bandwidth, lockin_order, free_amplitude):
+        """Sets the AM Mode parameters on the target system.
 
         Args:
             exc_type (ExcType): Type of excitation used (e.g., 'piezo', 'photothermal').
@@ -55,10 +52,7 @@ class FMMode():
             exc_phase (float): Excitation phase in degrees (-180 to 180).
             lockin_bandwidth (float): Lock-in amplifier bandwidth in Hertz.
             lockin_order (int): Lock-in amplifier order (1, 2, 3, or 4).
-            p_gain (float): PLL proportional gain.
-            i_gain (float): PLL integral gain.
-            d_gain (float): PLL derivative gain.
-            lock_pll (bool): True to lock the PLL, False to unlock.
+            free_amplitude (float): Free amplitude of the cantilever in volts.
         """
         pass
 
@@ -76,25 +70,29 @@ class FMMode():
 
     def get_exc_amplitude(self):
         """Retrieves the excitation amplitude."""
-        pass
+        return self._app.OperatingMode.VibratingAmpl
 
-    def set_exc_amplitude(self, exc_amplitude):
+    def set_exc_amplitude(self, value: float):
         """Sets the excitation amplitude.
 
         Args:
-            exc_amplitude (float): Amplitude in volts.
+            value (float): Amplitude in volts.
         """
-        pass
+        if not isinstance(value, (int, float)) or not (0 <= value <= 10):
+            raise ValueError(f"Invalid number of excitation amplitude: {value}. Must be a non-negative float.")
+
+        self._app.OperatingMode.VibratingAmpl = value
+        return 0
 
     def get_exc_offset(self):
         """Retrieves the excitation offset."""
         pass
 
-    def set_exc_offset(self, exc_offset):
+    def set_exc_offset(self, value: float):
         """Sets the excitation offset.
 
         Args:
-            exc_offset (float): Offset in volts.
+            value (float): Offset in volts (-10 to 10).
         """
         pass
 
@@ -102,7 +100,7 @@ class FMMode():
         """Retrieves the excitation frequency."""
         pass
 
-    def set_exc_frequency(self, exc_frequency):
+    def set_exc_frequency(self, value: float):
         """Sets the excitation frequency.
 
         Args:
@@ -114,11 +112,11 @@ class FMMode():
         """Retrieves the excitation phase."""
         pass
 
-    def set_exc_phase(self, exc_phase):
+    def set_exc_phase(self, value: float):
         """Sets the excitation phase.
 
         Args:
-            exc_phase (float): Phase in degrees (-180 to 180).
+            value (float): Phase in degrees (-180 to 180).
         """
         pass
 
@@ -140,11 +138,11 @@ class FMMode():
         """Retrieves the lock-in amplifier bandwidth."""
         pass
 
-    def set_lockin_bandwidth(self, lockin_bandwidth):
+    def set_lockin_bandwidth(self, value: float):
         """Sets the lock-in amplifier bandwidth.
 
         Args:
-            lockin_bandwidth (float): Bandwidth in Hertz.
+            value (float): Bandwidth in Hertz (must be a positive float greater than 0).
         """
         pass
 
@@ -152,59 +150,23 @@ class FMMode():
         """Retrieves the lock-in amplifier order."""
         pass
 
-    def set_lockin_order(self, lockin_order):
+    def set_lockin_order(self, value: int):
         """Sets the lock-in amplifier order.
 
         Args:
-            lockin_order (int): Order of the lock-in amplifier (1, 2, 3, or 4).
+            value (int): Order of the lock-in amplifier (must be 1, 2, 3, or 4).
         """
         pass
 
-    def get_pll_p_gain(self):
-        """Retrieves the PLL proportional gain."""
+    def get_free_amplitude(self):
+        """Retrieves the free amplitude of the cantilever."""
         pass
 
-    def set_pll_p_gain(self, p_gain):
-        """Sets the PLL proportional gain.
+    def set_free_amplitude(self, free_amplitude):
+        """Sets the free amplitude of the cantilever.
 
         Args:
-            p_gain (float): Proportional gain.
-        """
-        pass
-
-    def get_pll_i_gain(self):
-        """Retrieves the PLL integral gain."""
-        pass
-
-    def set_pll_i_gain(self, i_gain):
-        """Sets the PLL integral gain.
-
-        Args:
-            i_gain (float): Integral gain.
-        """
-        pass
-
-    def get_pll_d_gain(self):
-        """Retrieves the PLL derivative gain."""
-        pass
-
-    def set_pll_d_gain(self, d_gain):
-        """Sets the PLL derivative gain.
-
-        Args:
-            d_gain (float): Derivative gain.
-        """
-        pass
-
-    def get_pll_lock(self):
-        """Checks if the PLL is locked."""
-        pass
-
-    def set_pll_lock(self, lock):
-        """Locks or unlocks the PLL.
-
-        Args:
-            lock (bool): True to lock, False to unlock.
+            free_amplitude (float): Amplitude in volts.
         """
         pass
 
@@ -223,5 +185,5 @@ class FMMode():
         pass
 
     def __repr__(self):
-        """Represents the FMMode object as a string."""
-        return "FMMode()"
+        """Represents the AMMode object as a string."""
+        return "AMMode()"

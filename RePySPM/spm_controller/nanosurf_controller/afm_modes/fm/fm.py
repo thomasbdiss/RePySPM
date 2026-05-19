@@ -1,15 +1,16 @@
 from ..afmmode import ExcType, AFMModes
 
-class AMMode():
-    """
-    A class to control the Amplitude Modulation (AM) Mode for an Atomic Force Microscope (AFM) system.
 
-    This class provides methods to initialize, get, and set parameters specific to the AM Mode, 
-    including the ability to manage excitation settings, lock-in amplifier parameters, and the free amplitude.
+class FMMode():
+    """
+    A class to control the Frequency Modulation (FM) Mode for an Atomic Force Microscope (AFM) system.
+
+    This class provides methods to initialize, get, and set parameters specific to the FM Mode,
+    including the ability to manage excitation settings, lock-in amplifier parameters, and PLL gains.
 
     Methods:
-        get_mode_parameters: Fetches the current AM Mode parameters from the system.
-        set_mode_parameters: Sets the AM Mode parameters on the target system.
+        get_mode_parameters: Fetches the current FM Mode parameters from the system.
+        set_mode_parameters: Sets the FM Mode parameters on the target system.
         get_exc_type: Retrieves the excitation type used.
         set_exc_type: Sets the excitation type used.
         get_exc_amplitude: Retrieves the excitation amplitude.
@@ -26,20 +27,27 @@ class AMMode():
         set_lockin_bandwidth: Sets the lock-in amplifier bandwidth.
         get_lockin_order: Retrieves the lock-in amplifier order.
         set_lockin_order: Sets the lock-in amplifier order.
-        get_free_amplitude: Retrieves the free amplitude of the cantilever.
-        set_free_amplitude: Sets the free amplitude of the cantilever.
+        get_pll_p_gain: Retrieves the PLL proportional gain.
+        set_pll_p_gain: Sets the PLL proportional gain.
+        get_pll_i_gain: Retrieves the PLL integral gain.
+        set_pll_i_gain: Sets the PLL integral gain.
+        get_pll_d_gain: Retrieves the PLL derivative gain.
+        set_pll_d_gain: Sets the PLL derivative gain.
+        get_pll_lock: Checks if the PLL is locked.
+        set_pll_lock: Locks or unlocks the PLL.
         do_sweep: Performs a frequency sweep based on the given parameters.
     """
 
-    def __init__(self):
-        pass
+    def __init__(self, controller):
+        self.controller = controller
+        self._app = controller._app
 
     def get_mode_parameters(self):
-        """Fetches the current AM Mode parameters from the system."""
+        """Fetches the current FM Mode parameters from the system."""
         pass
 
-    def set_mode_parameters(self, exc_type, exc_amplitude, exc_offset, exc_frequency, exc_phase, lockin_bandwidth, lockin_order, free_amplitude):
-        """Sets the AM Mode parameters on the target system.
+    def set_mode_parameters(self, exc_type, exc_amplitude, exc_offset, exc_frequency, exc_phase, lockin_bandwidth, lockin_order, p_gain, i_gain, d_gain, lock_pll):
+        """Sets the FM Mode parameters on the target system.
 
         Args:
             exc_type (ExcType): Type of excitation used (e.g., 'piezo', 'photothermal').
@@ -49,7 +57,10 @@ class AMMode():
             exc_phase (float): Excitation phase in degrees (-180 to 180).
             lockin_bandwidth (float): Lock-in amplifier bandwidth in Hertz.
             lockin_order (int): Lock-in amplifier order (1, 2, 3, or 4).
-            free_amplitude (float): Free amplitude of the cantilever in volts.
+            p_gain (float): PLL proportional gain.
+            i_gain (float): PLL integral gain.
+            d_gain (float): PLL derivative gain.
+            lock_pll (bool): True to lock the PLL, False to unlock.
         """
         pass
 
@@ -151,15 +162,51 @@ class AMMode():
         """
         pass
 
-    def get_free_amplitude(self):
-        """Retrieves the free amplitude of the cantilever."""
+    def get_pll_p_gain(self):
+        """Retrieves the PLL proportional gain."""
         pass
 
-    def set_free_amplitude(self, free_amplitude):
-        """Sets the free amplitude of the cantilever.
+    def set_pll_p_gain(self, p_gain):
+        """Sets the PLL proportional gain.
 
         Args:
-            free_amplitude (float): Amplitude in volts.
+            p_gain (float): Proportional gain.
+        """
+        pass
+
+    def get_pll_i_gain(self):
+        """Retrieves the PLL integral gain."""
+        pass
+
+    def set_pll_i_gain(self, i_gain):
+        """Sets the PLL integral gain.
+
+        Args:
+            i_gain (float): Integral gain.
+        """
+        pass
+
+    def get_pll_d_gain(self):
+        """Retrieves the PLL derivative gain."""
+        pass
+
+    def set_pll_d_gain(self, d_gain):
+        """Sets the PLL derivative gain.
+
+        Args:
+            d_gain (float): Derivative gain.
+        """
+        pass
+
+    def get_pll_lock(self):
+        """Checks if the PLL is locked."""
+        pass
+
+    def set_pll_lock(self, lock):
+        """Locks or unlocks the PLL.
+
+        Args:
+            lock (bool): True to lock, False to unlock.
         """
         pass
 
@@ -178,5 +225,5 @@ class AMMode():
         pass
 
     def __repr__(self):
-        """Represents the AMMode object as a string."""
-        return "AMMode()"
+        """Represents the FMMode object as a string."""
+        return "FMMode()"

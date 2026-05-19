@@ -36,95 +36,119 @@ class ScanParameters:
         set_close_loopZ: Sets the status of close-loop control for the Z-axis.
     """
 
+    def __init__(self, controller):
+        self.controller = controller
+        self._app = controller._app
+
     def set_scan_parameters(
         self, width, height, rotation, offset_x, offset_y, scan_speed, pixels_x, pixels_y, tilt_x, tilt_y, close_loopXY, close_loopZ
     ):
         """Sets all scan parameters on the system."""
-        pass
+        self.set_width(width)
+        self.set_height(height)
+        self.set_rotation(rotation)
+        self.set_offset_x(offset_x)
+        self.set_offset_y(offset_y)
+        self.set_scan_speed(scan_speed)
+        self.set_pixels_x(pixels_x)
+        self.set_pixels_y(pixels_y)
+        return 0
 
     def get_scan_parameters(self):
         """Retrieves all current scan parameters from the system."""
-        pass
+        return [self.get_width(), self.get_height(), self.get_rotation(),
+                self.get_offset_x(), self.get_offset_y(), self.get_scan_speed(),
+                self.get_pixels_x(), self.get_pixels_y(), 0, 0, False, False]
 
     def get_width(self):
         """Retrieves the current width of the scan area."""
-        pass
+        return self._app.Scan.ImageWidth
 
     def set_width(self, value):
         """Sets the width of the scan area."""
-        pass
+        self._app.Scan.ImageWidth = value
+        return 0
 
     def get_height(self):
         """Retrieves the current height of the scan area."""
-        pass
+        return self._app.Scan.ImageHeight
 
     def set_height(self, value):
         """Sets the height of the scan area."""
-        pass
+        self._app.Scan.ImageHeight = value
+        return 0
 
     def get_rotation(self):
         """Retrieves the current rotation of the scan area."""
-        pass
+        return self._app.Scan.Rotation
 
     def set_rotation(self, value):
         """Sets the rotation of the scan area."""
-        pass
+        self._app.Scan.Rotation = value
+        return 0
 
     def get_offset_x(self):
         """Retrieves the current X offset of the scan area."""
-        pass
+        return self._app.Scan.CenterPosX
 
     def set_offset_x(self, value):
         """Sets the X offset of the scan area."""
-        pass
+        self._app.Scan.CenterPosX = value
+        return 0
 
     def get_offset_y(self):
         """Retrieves the current Y offset of the scan area."""
-        pass
+        return self._app.Scan.CenterPosY
 
     def set_offset_y(self, value):
         """Sets the Y offset of the scan area."""
-        pass
+        self._app.Scan.CenterPosY = value
+        return 0
 
     def get_scan_speed(self):
         """Retrieves the current scan speed."""
-        pass
+        return self._app.Scan.Scantime
 
     def set_scan_speed(self, value):
         """Sets the scan speed."""
-        pass
+        self._app.Scan.Scantime = value
+        return 0
 
     def get_pixels_x(self):
         """Retrieves the number of pixels in the X-axis."""
-        pass
+        return self._app.Scan.Points
 
     def set_pixels_x(self, value):
         """Sets the number of pixels in the X-axis."""
-        pass
+        self._app.Scan.Points = value
+        return 0
 
     def get_pixels_y(self):
         """Retrieves the number of pixels in the Y-axis."""
-        pass
+        return self._app.Scan.Lines
 
     def set_pixels_y(self, value):
         """Sets the number of pixels in the Y-axis."""
-        pass
+        self._app.Scan.Lines = value
+        return 0
 
     def get_tilt_x(self):
         """Retrieves the tilt in the X-axis."""
-        pass
+        return self._app.Scan.SlopeX
 
     def set_tilt_x(self, value):
         """Sets the tilt in the X-axis."""
-        pass
+        self._app.Scan.SlopeX = value
+        return 0
 
     def get_tilt_y(self):
         """Retrieves the tilt in the Y-axis."""
-        pass
+        return self._app.Scan.SlopeY
 
     def set_tilt_y(self, value):
         """Sets the tilt in the Y-axis."""
-        pass
+        self._app.Scan.SlopeY = value
+        return 0
 
     def get_close_loopXY(self):
         """Retrieves the status of close-loop control for the XY plane."""

@@ -2,8 +2,8 @@ class Signals:
     """
     A class to handle the signals from a scanning system.
 
-    This class provides methods to retrieve various signal measurements, 
-    such as deflection, amplitude, and phase from the system. It allows 
+    This class provides methods to retrieve various signal measurements,
+    such as deflection, amplitude, and phase from the system. It allows
     updating the current signals dynamically.
 
     Methods:
@@ -22,6 +22,10 @@ class Signals:
         get_exc_amplitude: Retrieves the excitation amplitude signal.
         get_exc_phase: Retrieves the excitation phase signal.
     """
+
+    def __init__(self, controller):
+        self.controller = controller
+        self._app = controller._app
 
     def get_vertical_deflection(self):
         """Retrieves the vertical deflection signal from the system."""
@@ -46,7 +50,7 @@ class Signals:
     def get_Z(self):
         """Retrieves the Z-coordinate signal from the system."""
         pass
-    
+
     def get_sensor_X(self):
         """Retrieves the X-coordinate sensor signal from the system."""
         pass
@@ -58,7 +62,7 @@ class Signals:
     def get_sensor_Z(self):
         """Retrieves the Z-coordinate sensor signal from the system."""
         pass
-    
+
     def get_measured_Z(self):
         """Retrieves the hight from the sensor signal from the system."""
         pass

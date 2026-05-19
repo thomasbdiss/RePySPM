@@ -1,3 +1,6 @@
+import time
+
+
 class ScanControl:
     """
     A class to control scanning operations for a given system.
@@ -43,6 +46,10 @@ class ScanControl:
         set_file_name_ramp: Sets the file name for ramp data storage.
     """
 
+    def __init__(self, controller):
+        self.controller = controller
+        self._app = controller._app
+
     def get_scan_control_parameters(self):
         """Retrieves the current scanning parameters from the system."""
         pass
@@ -53,11 +60,13 @@ class ScanControl:
 
     def scan_up(self):
         """Starts scanning in the upward direction."""
-        pass
+        self._app.Scan.StartFrameUp()
+        return 0
 
     def scan_down(self):
         """Starts scanning in the downward direction."""
-        pass
+        self._app.Scan.StartFrameDown()
+        return 0
 
     def scan_bouncing(self):
         """Starts bouncing scan."""
@@ -65,7 +74,8 @@ class ScanControl:
 
     def scan_stop(self):
         """Stops scanning."""
-        pass
+        self._app.Scan.StopScan()
+        return 0
 
     def scan_pause(self):
         """Pauses scanning."""
@@ -106,7 +116,7 @@ class ScanControl:
     def is_paused(self):
         """Checks if scanning is paused."""
         pass
-    
+
     def isContinuousScan(self):
         """Checks if continuous scanning is enabled."""
         pass
@@ -118,7 +128,7 @@ class ScanControl:
     def get_pixel_pos(self):
         """Retrieves the current scanning XY pixel numbers."""
         pass
-    
+
     def get_line(self):
         """Retrieves the current scanning line."""
         pass
@@ -135,7 +145,17 @@ class ScanControl:
             y (float): Desired Y position in meters.
             forced (bool): If True, scanning stops to move the tip.
         """
-        pass
+        if forced:
+            self.scan_stop()
+
+        self.controller.scan_parameters.set_width(1e-12)
+        self.controller.scan_parameters.set_height(1e-12)
+        self.controller.scan_parameters.set_offset_x(x)
+        self.controller.scan_parameters.set_offset_y(y)
+
+        self.scan_down()
+        time.sleep(self.controller.scan_parameters.get_scan_speed() * 1.1)
+        self.scan_stop()
 
     def get_path(self):
         """Retrieves the path associated with the scan."""
@@ -238,7 +258,7 @@ class ScanControl:
     def is_ramping(self):
         """Checks if the ramping is active."""
         pass
-    
+
     def get_path_ramp(self):
         """Retrieves the path for ramp data storage."""
         pass
@@ -266,4 +286,3 @@ class ScanControl:
     def __repr__(self):
         """Represents the ScanControl object as a string."""
         return "ScanControl()"
-
