@@ -17,6 +17,7 @@ from .lasers import Lasers
 from .image import AcquiredImage
 from .utils import Utils
 from .sicm import Sicm
+from .bias import Bias
 
 from .afm_modes.afmmode import AFMMode
 from .afm_modes.am import AMMode
@@ -69,6 +70,7 @@ class AFMController:
         self.lasers = Lasers(self)
         self.image = AcquiredImage(self)
         self.sicm = Sicm(self)
+        self.bias = Bias(self)
 
         if conn_type == "activex":
             self.utils = Utils(self, host_or_path)
